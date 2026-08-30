@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://ch2vap4e0b2ut"]
+
+[ext_resource type="Script" uid="uid://cfw4hngvjmmsx" path="res://agents/scripts/agent.gd" id="1_3e1fn"]
+[ext_resource type="Texture2D" uid="uid://c75jrp57x4wfs" path="res://icon.svg" id="1_6poxf"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y1p4y"]
+
+[node name="Agent" type="CharacterBody2D" unique_id=954043455]
+script = ExtResource("1_3e1fn")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=32021550]
+texture = ExtResource("1_6poxf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2059282234]
+shape = SubResource("CircleShape2D_y1p4y")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=689302219]
+path_desired_distance = 5.0
+target_desired_distance = 5.0

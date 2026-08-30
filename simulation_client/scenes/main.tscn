@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://dhuwwsh7atsis"]
+
+[ext_resource type="Script" uid="uid://bqe5qlc1nkkn6" path="res://scripts/location_manager.gd" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://ch2vap4e0b2ut" path="res://agents/agent.tscn" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://dmueoaevtsi73" path="res://command_handler.gd" id="2_sugp2"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_wo3q2"]
+vertices = PackedVector2Array(786, 289.78906, 1142, 282.21094, 1142, 438, 786, 330, 202, 438, 614, 330, 202, 138, 614, 270.14844, 1142, 138, 1142, 262.14063)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(3, 2, 4, 5), PackedInt32Array(5, 4, 6, 7), PackedInt32Array(7, 6, 8, 9)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(192, 128, 624, 128, 624, 283.84402, 624, 315.87802, 624, 448, 192, 448), PackedVector2Array(624, 280, 1152, 272, 1152, 128, 624, 128), PackedVector2Array(624, 320, 1152, 320, 1152, 448, 624, 448), PackedVector2Array(776, 320, 776, 280, 1152, 272, 1152, 320)])
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_he2tf"]
+size = Vector2(150, 30)
+
+[node name="Main" type="Node2D" unique_id=1881454185]
+
+[node name="world" type="Node2D" parent="." unique_id=193439089]
+
+[node name="Navigation" type="NavigationRegion2D" parent="world" unique_id=414700220]
+navigation_polygon = SubResource("NavigationPolygon_wo3q2")
+
+[node name="Locations" type="Node2D" parent="world" unique_id=1879982890]
+
+[node name="kitchen" type="Marker2D" parent="world/Locations" unique_id=738930788]
+position = Vector2(900, 300)
+
+[node name="Obstacles" type="Node2D" parent="world" unique_id=437889326]
+
+[node name="Wall" type="StaticBody2D" parent="world/Obstacles" unique_id=2114039029]
+position = Vector2(700, 300)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="world/Obstacles/Wall" unique_id=1123721725]
+shape = SubResource("RectangleShape2D_he2tf")
+
+[node name="Polygon2D" type="Polygon2D" parent="world/Obstacles/Wall" unique_id=1577053653]
+position = Vector2(-3, -4)
+scale = Vector2(1, 0.75)
+polygon = PackedVector2Array(-72, -16, -72, 25.333334, 78, 25.333334, 78, -16)
+uv = PackedVector2Array(-12, 0.40000153, -96, -2)
+
+[node name="LocationManager" type="Node2D" parent="world" unique_id=1220167842]
+script = ExtResource("1_0wfyh")
+
+[node name="CommandHandler" type="Node" parent="world" unique_id=1496220471]
+script = ExtResource("2_sugp2")
+
+[node name="Agents" type="Node2D" parent="world" unique_id=439519344]
+
+[node name="Agent" parent="world/Agents" unique_id=954043455 instance=ExtResource("1_o5qli")]
+position = Vector2(400, 300)
+
+[editable path="world/Agents/Agent"]
