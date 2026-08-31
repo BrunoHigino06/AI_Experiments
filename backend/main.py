@@ -1,5 +1,6 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 
+
 app = FastAPI()
 
 
@@ -10,14 +11,23 @@ async def websocket_endpoint(websocket: WebSocket):
     print("Simulator Client conectado!")
 
     try:
+        await websocket.send_json({
+            "type": "command",
+            "data": {
+                "agent_id": "agent_001",
+                "action": "move",
+                "target": "kitchen"
+            }
+        })
+
         while True:
             message = await websocket.receive_text()
 
             print("Mensagem recebida:", message)
 
-            await websocket.send_text(
-                f"Backend recebeu: {message}"
-            )
-
+            await websocket.send_json({
+                "type": "ack",
+                "message": "Estado recebido"
+            })
     except WebSocketDisconnect:
         print("Simulator Client desconectado!")

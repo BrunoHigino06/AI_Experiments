@@ -1,2 +1,7 @@
-*.venv
-_pycache__/**
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Godot
+.godot/

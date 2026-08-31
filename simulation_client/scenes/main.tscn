@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bqe5qlc1nkkn6" path="res://scripts/location_manager.gd" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://ch2vap4e0b2ut" path="res://agents/agent.tscn" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://dmueoaevtsi73" path="res://command_handler.gd" id="2_sugp2"]
+[ext_resource type="Script" uid="uid://64ry4ieiwpak" path="res://web_socket_client.gd" id="3_jyhfs"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_wo3q2"]
 vertices = PackedVector2Array(786, 289.78906, 1142, 282.21094, 1142, 438, 786, 330, 202, 438, 614, 330, 202, 138, 614, 270.14844, 1142, 138, 1142, 262.14063)
@@ -43,6 +44,9 @@ script = ExtResource("1_0wfyh")
 
 [node name="CommandHandler" type="Node" parent="world" unique_id=1496220471]
 script = ExtResource("2_sugp2")
+
+[node name="WebSocketClient" type="Node" parent="world" unique_id=1474225448]
+script = ExtResource("3_jyhfs")
 
 [node name="Agents" type="Node2D" parent="world" unique_id=439519344]
 

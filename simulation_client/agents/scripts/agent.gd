@@ -42,3 +42,12 @@ func _physics_process(_delta):
 	var direction = global_position.direction_to(next_position)
 	velocity = direction * speed
 	move_and_slide()
+
+func get_state() -> Dictionary:
+	return {
+		"agent_id": agent_id,
+		"position": {
+			"x": global_position.x,
+			"y": global_position.y
+		}
+	}
