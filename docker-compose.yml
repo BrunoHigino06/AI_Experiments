@@ -1,0 +1,26 @@
+services:
+
+  backend:
+    build: ./backend
+    container_name: ai_experiment_backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ai_experiments
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    container_name: ai_experiment_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_experiments
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

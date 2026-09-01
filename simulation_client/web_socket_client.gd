@@ -32,7 +32,7 @@ func _process(_delta):
 
 			if json is Dictionary:
 				if json.get("type", "") == "command":
-					command_handler.execute_command(json.get("data", {}))
+					command_handler.execute_command(json)
 
 
 func send_agent_states():

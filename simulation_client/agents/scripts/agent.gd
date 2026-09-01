@@ -51,3 +51,4 @@ func get_state() -> Dictionary:
 			"y": global_position.y
 		}
 	}
+	
