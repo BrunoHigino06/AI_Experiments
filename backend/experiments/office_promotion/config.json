@@ -1,0 +1,54 @@
+{
+  "name": "Office Promotion",
+  "description": "Competição interna por promoção",
+
+  "duration": 30,
+
+  "rules": {
+    "promotions": 1,
+    "terminations": 1
+  },
+
+  "world": {
+    "locations": [
+      {
+        "id": "office",
+        "type": "room",
+        "objects": [
+          "desk",
+          "chair",
+          "computer"
+        ]
+      },
+      {
+        "id": "kitchen",
+        "type": "room",
+        "objects": [
+          "table",
+          "chair",
+          "refrigerator",
+          "coffee_machine",
+          "sink"
+        ]
+      },
+      {
+        "id": "manager_office",
+        "type": "room",
+        "objects": [
+          "desk",
+          "chair",
+          "computer"
+        ]
+      },
+      {
+        "id": "bathroom",
+        "type": "room",
+        "objects": [
+          "toilet",
+          "sink",
+          "mirror"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+Retorne sua decisão no seguinte formato JSON:
+
+{
+    "decision": "descreva o que você decidiu fazer e, quando relevante, por quê",
+    "goal": "objetivo imediato que você está tentando alcançar",
+    "plan": [
+        "primeiro passo de alto nível",
+        "segundo passo de alto nível",
+        "terceiro passo de alto nível"
+    ]
+}
+
+Informações disponíveis:
+
+{{perception}}
