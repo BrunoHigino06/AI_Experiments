@@ -2,250 +2,234 @@
   "locations": [
     {
       "id": "office",
-      "name": "Escritório",
-      "type": "room",
-      "connections": [
-        "kitchen",
-        "manager_office",
-        "bathroom"
-      ],
-      "objects": [
-        {
-          "id": "desk_1",
-          "name": "Mesa",
-          "type": "desk"
-        },
-        {
-          "id": "chair_1",
-          "name": "Cadeira",
-          "type": "chair"
-        },
-        {
-          "id": "computer_1",
-          "name": "Computador",
-          "type": "computer"
-        }
-      ]
+      "name": "Escritório"
     },
     {
       "id": "kitchen",
-      "name": "Cozinha",
-      "type": "room",
-      "connections": [
-        "office"
-      ],
-      "objects": [
-        {
-          "id": "table_1",
-          "name": "Mesa",
-          "type": "table"
-        },
-        {
-          "id": "chair_2",
-          "name": "Cadeira",
-          "type": "chair"
-        },
-        {
-          "id": "refrigerator_1",
-          "name": "Geladeira",
-          "type": "refrigerator"
-        },
-        {
-          "id": "coffee_machine_1",
-          "name": "Máquina de café",
-          "type": "coffee_machine"
-        },
-        {
-          "id": "sink_1",
-          "name": "Pia",
-          "type": "sink"
-        }
-      ]
+      "name": "Cozinha"
     },
     {
       "id": "manager_office",
-      "name": "Escritório da gerente",
-      "type": "room",
-      "connections": [
-        "office"
-      ],
-      "objects": [
-        {
-          "id": "desk_2",
-          "name": "Mesa",
-          "type": "desk"
-        },
-        {
-          "id": "chair_3",
-          "name": "Cadeira",
-          "type": "chair"
-        },
-        {
-          "id": "computer_2",
-          "name": "Computador",
-          "type": "computer"
-        }
-      ]
+      "name": "Sala da gerente"
     },
     {
       "id": "bathroom",
-      "name": "Banheiro",
-      "type": "room",
-      "connections": [
-        "office"
-      ],
-      "objects": [
-        {
-          "id": "toilet_1",
-          "name": "Vaso sanitário",
-          "type": "toilet"
-        },
-        {
-          "id": "sink_2",
-          "name": "Pia",
-          "type": "sink"
-        },
-        {
-          "id": "mirror_1",
-          "name": "Espelho",
-          "type": "mirror"
-        }
-      ]
+      "name": "Banheiro"
     }
   ],
-
-  "object_types": {
-    "desk": {
-      "name": "Mesa",
-      "category": "furniture",
-      "properties": {
-        "solid": true,
-        "movable": true,
-        "destructible": true
-      }
-    },
-    "table": {
-      "name": "Mesa",
-      "category": "furniture",
-      "properties": {
-        "solid": true,
-        "movable": true,
-        "destructible": true
-      }
-    },
-    "chair": {
-      "name": "Cadeira",
-      "category": "furniture",
-      "properties": {
-        "solid": true,
-        "movable": true,
-        "destructible": true
-      }
-    },
-    "computer": {
-      "name": "Computador",
-      "category": "device",
-      "properties": {
-        "solid": true,
-        "movable": true,
-        "destructible": true
-      }
-    },
-    "refrigerator": {
-      "name": "Geladeira",
-      "category": "appliance",
-      "properties": {
-        "solid": true,
-        "movable": true,
-        "destructible": true
-      }
-    },
-    "coffee_machine": {
-      "name": "Máquina de café",
-      "category": "appliance",
-      "properties": {
-        "solid": true,
-        "movable": true,
-        "destructible": true
-      }
-    },
-    "sink": {
-      "name": "Pia",
-      "category": "fixture",
-      "properties": {
-        "solid": true,
-        "movable": false,
-        "destructible": true
-      }
-    },
-    "toilet": {
-      "name": "Vaso sanitário",
-      "category": "fixture",
-      "properties": {
-        "solid": true,
-        "movable": false,
-        "destructible": true
-      }
-    },
-    "mirror": {
-      "name": "Espelho",
-      "category": "decoration",
-      "properties": {
-        "solid": true,
-        "movable": true,
-        "destructible": true
-      }
-    }
-  },
 
   "agents": [
     {
       "id": "agent_001",
       "name": "Funcionário 1",
-      "role": "employee"
+      "role": "employee",
+      "location": "office"
     },
     {
       "id": "lidia",
       "name": "Lídia",
-      "role": "employee"
+      "role": "employee",
+      "location": "office"
     },
     {
       "id": "carlos",
       "name": "Carlos",
-      "role": "accountant"
+      "role": "employee",
+      "location": "office"
     },
     {
       "id": "tais",
       "name": "Taís",
-      "role": "manager"
+      "role": "manager",
+      "location": "manager_office"
     }
   ],
 
-  "relationships": [
+  "objects": [
     {
-      "from": "agent_001",
-      "type": "reports_to",
-      "to": "tais"
+      "id": "desk_1",
+      "name": "Mesa",
+      "type": "desk",
+      "location": "office",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": false,
+        "writable": false,
+        "usable": false
+      }
     },
     {
-      "from": "lidia",
-      "type": "works_with",
-      "to": "agent_001"
+      "id": "chair_1",
+      "name": "Cadeira",
+      "type": "chair",
+      "location": "office",
+      "properties": {
+        "solid": true,
+        "movable": true,
+        "readable": false,
+        "writable": false,
+        "usable": true
+      }
     },
     {
-      "from": "lidia",
-      "type": "reports_to",
-      "to": "tais"
+      "id": "computer_1",
+      "name": "Computador",
+      "type": "computer",
+      "location": "office",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": true,
+        "writable": true,
+        "usable": true
+      }
+    },
+
+    {
+      "id": "table_1",
+      "name": "Mesa da cozinha",
+      "type": "table",
+      "location": "kitchen",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": false,
+        "writable": false,
+        "usable": false
+      }
     },
     {
-      "from": "carlos",
-      "type": "works_with",
-      "to": "agent_001"
+      "id": "chair_2",
+      "name": "Cadeira",
+      "type": "chair",
+      "location": "kitchen",
+      "properties": {
+        "solid": true,
+        "movable": true,
+        "readable": false,
+        "writable": false,
+        "usable": true
+      }
     },
     {
-      "from": "carlos",
-      "type": "reports_to",
-      "to": "tais"
+      "id": "refrigerator_1",
+      "name": "Geladeira",
+      "type": "refrigerator",
+      "location": "kitchen",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": false,
+        "writable": false,
+        "usable": true
+      }
+    },
+    {
+      "id": "coffee_machine_1",
+      "name": "Máquina de café",
+      "type": "coffee_machine",
+      "location": "kitchen",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": false,
+        "writable": false,
+        "usable": true
+      }
+    },
+    {
+      "id": "sink_1",
+      "name": "Pia",
+      "type": "sink",
+      "location": "kitchen",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": false,
+        "writable": false,
+        "usable": true
+      }
+    },
+
+    {
+      "id": "desk_2",
+      "name": "Mesa da gerente",
+      "type": "desk",
+      "location": "manager_office",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": false,
+        "writable": false,
+        "usable": false
+      }
+    },
+    {
+      "id": "chair_3",
+      "name": "Cadeira da gerente",
+      "type": "chair",
+      "location": "manager_office",
+      "properties": {
+        "solid": true,
+        "movable": true,
+        "readable": false,
+        "writable": false,
+        "usable": true
+      }
+    },
+    {
+      "id": "computer_2",
+      "name": "Computador da gerente",
+      "type": "computer",
+      "location": "manager_office",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": true,
+        "writable": true,
+        "usable": true
+      }
+    },
+
+    {
+      "id": "toilet_1",
+      "name": "Vaso sanitário",
+      "type": "toilet",
+      "location": "bathroom",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": false,
+        "writable": false,
+        "usable": true
+      }
+    },
+    {
+      "id": "sink_2",
+      "name": "Pia",
+      "type": "sink",
+      "location": "bathroom",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": false,
+        "writable": false,
+        "usable": true
+      }
+    },
+    {
+      "id": "mirror_1",
+      "name": "Espelho",
+      "type": "mirror",
+      "location": "bathroom",
+      "properties": {
+        "solid": true,
+        "movable": false,
+        "readable": false,
+        "writable": false,
+        "usable": false
+      }
     }
   ]
 }
