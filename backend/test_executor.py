@@ -4,6 +4,7 @@ from pathlib import Path
 from world_state import WorldState
 from executor import Executor
 from agent_runtime import AgentRuntime
+from event_system import EventSystem
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -41,6 +42,11 @@ world_state = WorldState(world)
 
 executor = Executor(world_state)
 
+# ==========================================
+# CRIAR EVENT SYSTEM
+# ==========================================
+
+event_system = EventSystem()
 
 # ==========================================
 # CRIAR AGENT RUNTIME
@@ -52,99 +58,88 @@ runtime = AgentRuntime(agent_id)
 
 
 # ==========================================
-# PERCEPÇÃO DO AGENTE
+# PERCEPÇÃO INICIAL
 # ==========================================
 
 perception = {
     "location": "office",
+
+    "visible_agents": [
+        "lidia",
+        "carlos"
+    ],
+
+    "known_agents": [
+        "lidia",
+        "carlos",
+        "tais"
+    ],
+
     "nearby": [
         "chair_1",
-        "chair_2",
         "desk_1",
+        "computer_1",
         "kitchen"
     ]
 }
 
 
 # ==========================================
-# MOSTRAR ESTADO INICIAL
+# LOOP DO AGENTE
 # ==========================================
 
-print()
-print("================================")
-print("ESTADO INICIAL")
-print("================================")
+MAX_TURNS = 10
 
-print(
-    json.dumps(
-        world_state.get_state(),
-        ensure_ascii=False,
-        indent=2
-    )
-)
-
-
-# ==========================================
-# AGENTE PENSA
-# ==========================================
-
-result = runtime.decide(perception)
-
-
-decision = result["decision"]
-plan = result["plan"]
-
-
-# ==========================================
-# MOSTRAR DECISÃO
-# ==========================================
-
-print()
-print("================================")
-print("DECISÃO GERADA PELO AGENTE")
-print("================================")
-
-print(
-    json.dumps(
-        decision,
-        ensure_ascii=False,
-        indent=2
-    )
-)
-
-
-# ==========================================
-# MOSTRAR PLANO
-# ==========================================
-
-print()
-print("================================")
-print("PLANO GERADO PELO AGENTE")
-print("================================")
-
-print(
-    json.dumps(
-        plan,
-        ensure_ascii=False,
-        indent=2
-    )
-)
-
-
-# ==========================================
-# EXECUTAR PLANO
-# ==========================================
-
-steps = plan.get("steps", [])
-
-
-for index, action in enumerate(steps, start=1):
+for turn in range(1, MAX_TURNS + 1):
 
     print()
-    print("================================")
-    print(f"EXECUTANDO PASSO {index}")
-    print("================================")
+    print("################################")
+    print(f"TURNO {turn}")
+    print("################################")
 
+
+    # ======================================
+    # AGENTE PENSA
+    # ======================================
+
+    result = runtime.decide(perception)
+
+    decision = result["decision"]
+    plan = result["plan"]
+
+    print()
+    print("DECISÃO:")
+    print(
+        json.dumps(
+            decision,
+            ensure_ascii=False,
+            indent=2
+        )
+    )
+
+
+    # ======================================
+    # VERIFICAR PLANO
+    # ======================================
+
+    steps = plan.get("steps", [])
+
+    if not steps:
+
+        print()
+        print("O agente não possui ações para executar.")
+
+        break
+
+
+    # ======================================
+    # PEGAR APENAS A PRIMEIRA AÇÃO
+    # ======================================
+
+    action = steps[0]
+
+    print()
+    print("AÇÃO ESCOLHIDA:")
     print(
         json.dumps(
             action,
@@ -153,13 +148,18 @@ for index, action in enumerate(steps, start=1):
         )
     )
 
+
+    # ======================================
+    # EXECUTAR
+    # ======================================
+
     result = executor.execute(
         agent_id,
         action
     )
 
     print()
-    print("RESULTADO:")
+    print("RESULTADO DA EXECUÇÃO:")
 
     print(
         json.dumps(
@@ -170,14 +170,114 @@ for index, action in enumerate(steps, start=1):
     )
 
 
+    # ======================================
+    # CRIAR EVENTO
+    # ======================================
+
+    event = event_system.action_result(
+        agent_id,
+        action,
+        result
+    )
+
+    print()
+    print("EVENTO GERADO:")
+
+    print(
+        json.dumps(
+            event,
+            ensure_ascii=False,
+            indent=2
+        )
+    )
+
+
+    # ======================================
+    # SUCESSO
+    # ======================================
+
+    if result.get("success"):
+
+        print()
+        print("AÇÃO EXECUTADA COM SUCESSO.")
+
+        # Atualizar percepção básica
+        perception["location"] = (
+            world_state
+            .get_agent(agent_id)
+            .get("location")
+        )
+
+        continue
+
+    # ======================================
+    # FALHA
+    # ======================================
+
+    print()
+    print("AÇÃO FALHOU.")
+
+    print()
+    print("GERANDO EVENTO...")
+
+
+    event = event_system.action_result(
+        agent_id,
+        action,
+        result
+    )
+
+    perception["last_event"] = event
+
+    print(
+        json.dumps(
+            event,
+            ensure_ascii=False,
+            indent=2
+        )
+    )
+
+
+    # ======================================
+    # NOVA PERCEPÇÃO
+    # ======================================
+
+    perception["last_event"] = event
+
+    print()
+    print("NOVA PERCEPÇÃO:")
+
+    print(
+        json.dumps(
+            perception,
+            ensure_ascii=False,
+            indent=2
+        )
+    )
+
+
+    # ======================================
+    # IMPORTANTE
+    # ======================================
+    #
+    # Não executamos o restante do plano.
+    #
+    # O agente volta para o LLM e decide
+    # novamente com base no que aconteceu.
+    #
+
+    print()
+    print("O AGENTE DEVE TOMAR UMA NOVA DECISÃO.")
+
+
 # ==========================================
 # ESTADO FINAL
 # ==========================================
 
 print()
-print("================================")
+print("################################")
 print("ESTADO FINAL")
-print("================================")
+print("################################")
 
 print(
     json.dumps(

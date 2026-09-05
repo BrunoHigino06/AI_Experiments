@@ -3,6 +3,10 @@ class Executor:
     def __init__(self, world_state):
         self.world_state = world_state
 
+    # ==========================================
+    # EXECUTAR AÇÃO
+    # ==========================================
+
     def execute(self, agent_id: str, action: dict):
 
         action_type = action.get("action")
@@ -44,7 +48,6 @@ class Executor:
 
         target = action.get("target")
 
-        # Verificar se o agente existe
         agent = self.world_state.get_agent(agent_id)
 
         if agent is None:
@@ -53,11 +56,21 @@ class Executor:
                 "error": f"Agente inexistente: {agent_id}"
             }
 
-        # Verificar se o destino é realmente um local
         if not self.world_state.location_exists(target):
             return {
                 "success": False,
                 "error": f"Local inexistente: {target}"
+            }
+
+        current_location = agent.get("location")
+
+        if current_location == target:
+            return {
+                "success": True,
+                "action": "move",
+                "agent_id": agent_id,
+                "target": target,
+                "message": "O agente já está neste local."
             }
 
         success = self.world_state.set_agent_location(
@@ -80,7 +93,6 @@ class Executor:
 
         target = action.get("target")
 
-        # Verificar agente que executa a ação
         agent = self.world_state.get_agent(agent_id)
 
         if agent is None:
@@ -89,7 +101,6 @@ class Executor:
                 "error": f"Agente inexistente: {agent_id}"
             }
 
-        # Verificar agente alvo
         target_agent = self.world_state.get_agent(target)
 
         if target_agent is None:
@@ -98,19 +109,16 @@ class Executor:
                 "error": f"Agente alvo inexistente: {target}"
             }
 
-        # Não conversar consigo mesmo
         if agent_id == target:
             return {
                 "success": False,
                 "error": "Um agente não pode conversar consigo mesmo."
             }
 
-        # Verificar localização
         agent_location = agent.get("location")
         target_location = target_agent.get("location")
 
         if agent_location != target_location:
-
             return {
                 "success": False,
                 "error": (
@@ -152,22 +160,48 @@ class Executor:
                 "error": f"Objeto inexistente: {object_id}"
             }
 
-        if object_state["held_by"] is not None:
-            return {
-                "success": False,
-                "error": f"{object_id} já está sendo segurado."
-            }
+        # ==========================================
+        # VERIFICAR SE O OBJETO PODE SER MOVIDO
+        # ==========================================
 
-        # O objeto precisa estar no mesmo local do agente
-        if object_state["location"] != agent["location"]:
+        properties = self._get_object_properties(object_id)
 
+        if not properties.get("movable", False):
             return {
                 "success": False,
                 "error": (
-                    f"O objeto {object_id} não está no mesmo local "
-                    f"que o agente."
+                    f"O objeto {object_id} não pode ser movido."
                 )
             }
+
+        # ==========================================
+        # VERIFICAR SE JÁ ESTÁ SENDO SEGURADO
+        # ==========================================
+
+        if object_state["held_by"] is not None:
+            return {
+                "success": False,
+                "error": (
+                    f"{object_id} já está sendo segurado."
+                )
+            }
+
+        # ==========================================
+        # VERIFICAR LOCALIZAÇÃO
+        # ==========================================
+
+        if object_state["location"] != agent["location"]:
+            return {
+                "success": False,
+                "error": (
+                    f"O objeto {object_id} não está no mesmo "
+                    f"local que o agente."
+                )
+            }
+
+        # ==========================================
+        # PEGAR OBJETO
+        # ==========================================
 
         success = self.world_state.set_object_held_by(
             object_id,
@@ -224,6 +258,10 @@ class Executor:
                 "error": f"Objeto inexistente: {object_id}"
             }
 
+        # ==========================================
+        # VERIFICAR SE O AGENTE ESTÁ SEGURANDO
+        # ==========================================
+
         if agent["holding"] != object_id:
             return {
                 "success": False,
@@ -233,13 +271,32 @@ class Executor:
                 )
             }
 
-        # Por enquanto, o destino de drop deve ser um local
-        if not self.world_state.location_exists(target):
+        # ==========================================
+        # DESTINO PRECISA SER UM LOCAL
+        # ==========================================
 
+        if not self.world_state.location_exists(target):
             return {
                 "success": False,
                 "error": f"Local inexistente: {target}"
             }
+
+        # ==========================================
+        # O AGENTE PRECISA ESTAR NO LOCAL
+        # ==========================================
+
+        if agent["location"] != target:
+            return {
+                "success": False,
+                "error": (
+                    f"O agente não está no local onde "
+                    f"pretende soltar o objeto."
+                )
+            }
+
+        # ==========================================
+        # SOLTAR OBJETO
+        # ==========================================
 
         success = self.world_state.set_object_location(
             object_id,
@@ -284,9 +341,17 @@ class Executor:
                 "error": f"Objeto inexistente: {target}"
             }
 
-        # O objeto precisa estar no mesmo local
-        if object_state["location"] != agent["location"]:
+        properties = self._get_object_properties(target)
 
+        if not properties.get("usable", False):
+            return {
+                "success": False,
+                "error": (
+                    f"O objeto {target} não pode ser usado."
+                )
+            }
+
+        if object_state["location"] != agent["location"]:
             return {
                 "success": False,
                 "error": (
@@ -326,8 +391,17 @@ class Executor:
                 "error": f"Objeto inexistente: {target}"
             }
 
-        if object_state["location"] != agent["location"]:
+        properties = self._get_object_properties(target)
 
+        if not properties.get("readable", False):
+            return {
+                "success": False,
+                "error": (
+                    f"O objeto {target} não pode ser lido."
+                )
+            }
+
+        if object_state["location"] != agent["location"]:
             return {
                 "success": False,
                 "error": (
@@ -367,8 +441,17 @@ class Executor:
                 "error": f"Objeto inexistente: {target}"
             }
 
-        if object_state["location"] != agent["location"]:
+        properties = self._get_object_properties(target)
 
+        if not properties.get("writable", False):
+            return {
+                "success": False,
+                "error": (
+                    f"O objeto {target} não pode ser escrito."
+                )
+            }
+
+        if object_state["location"] != agent["location"]:
             return {
                 "success": False,
                 "error": (
@@ -403,3 +486,16 @@ class Executor:
             "action": "save",
             "agent_id": agent_id
         }
+
+    # ==========================================
+    # PROPRIEDADES DO OBJETO
+    # ==========================================
+
+    def _get_object_properties(self, object_id):
+
+        for obj in self.world_state.world.get("objects", []):
+
+            if obj.get("id") == object_id:
+                return obj.get("properties", {})
+
+        return {}
